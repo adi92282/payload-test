@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 
+// ---------- Root Pagination ----------
 export const Pagination: React.FC<React.ComponentProps<'nav'>> = ({ className, ...props }) => {
   return (
     <nav
@@ -18,6 +19,7 @@ export const Pagination: React.FC<React.ComponentProps<'nav'>> = ({ className, .
   )
 }
 
+// ---------- Pagination Content ----------
 export const PaginationContent: React.FC<React.ComponentProps<'ul'>> = ({ className, ...props }) => {
   return (
     <ul
@@ -28,10 +30,12 @@ export const PaginationContent: React.FC<React.ComponentProps<'ul'>> = ({ classN
   )
 }
 
+// ---------- Pagination Item ----------
 export const PaginationItem: React.FC<React.ComponentProps<'li'>> = (props) => {
   return <li data-slot="pagination-item" {...props} />
 }
 
+// ---------- Pagination Link ----------
 export type PaginationLinkProps = {
   isActive?: boolean
   disabled?: boolean
@@ -63,6 +67,7 @@ export const PaginationLink: React.FC<PaginationLinkProps> = ({
   )
 }
 
+// ---------- Previous Button ----------
 export type PaginationPreviousProps = React.ComponentProps<typeof PaginationLink> & {
   text?: string
 }
@@ -87,6 +92,7 @@ export const PaginationPrevious: React.FC<PaginationPreviousProps> = ({
   )
 }
 
+// ---------- Next Button ----------
 export type PaginationNextProps = React.ComponentProps<typeof PaginationLink> & {
   text?: string
 }
@@ -111,6 +117,7 @@ export const PaginationNext: React.FC<PaginationNextProps> = ({
   )
 }
 
+// ---------- Ellipsis ----------
 export const PaginationEllipsis: React.FC<React.ComponentProps<'span'>> = ({
   className,
   ...props
@@ -131,6 +138,7 @@ export const PaginationEllipsis: React.FC<React.ComponentProps<'span'>> = ({
   )
 }
 
+// ---------- Full PostsPagination Component ----------
 export const PostsPagination: React.FC<{
   page: number
   totalPages: number
@@ -139,12 +147,25 @@ export const PostsPagination: React.FC<{
   const router = useRouter()
   const hasNext = page < totalPages
   const hasPrev = page > 1
-  const hasExtraPrev = page - 1 > 1
-  const hasExtraNext = page + 1 < totalPages
+
+  // Dynamic page numbers, show up to 5 pages around current
+  const pages: (number | 'ellipsis')[] = []
+  if (totalPages <= 7) {
+    for (let i = 1; i <= totalPages; i++) pages.push(i)
+  } else {
+    pages.push(1)
+    if (page > 4) pages.push('ellipsis')
+    const start = Math.max(2, page - 1)
+    const end = Math.min(totalPages - 1, page + 1)
+    for (let i = start; i <= end; i++) pages.push(i)
+    if (page + 1 < totalPages - 1) pages.push('ellipsis')
+    pages.push(totalPages)
+  }
 
   return (
     <Pagination className={cn("my-12", className)}>
       <PaginationContent>
+        {/* Previous */}
         <PaginationItem>
           <PaginationPrevious
             disabled={!hasPrev}
@@ -152,42 +173,25 @@ export const PostsPagination: React.FC<{
           />
         </PaginationItem>
 
-        {hasExtraPrev && (
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
+        {/* Page numbers */}
+        {pages.map((p, idx) =>
+          p === 'ellipsis' ? (
+            <PaginationItem key={`ellipsis-${idx}`}>
+              <PaginationEllipsis />
+            </PaginationItem>
+          ) : (
+            <PaginationItem key={p}>
+              <PaginationLink
+                isActive={p === page}
+                onClick={() => router.push(`/posts/page/${p}`)}
+              >
+                {p}
+              </PaginationLink>
+            </PaginationItem>
+          )
         )}
 
-        {hasPrev && (
-          <PaginationItem>
-            <PaginationLink
-              onClick={() => router.push(`/posts/page/${page - 1}`)}
-            >
-              {page - 1}
-            </PaginationLink>
-          </PaginationItem>
-        )}
-
-        <PaginationItem>
-          <PaginationLink isActive>{page}</PaginationLink>
-        </PaginationItem>
-
-        {hasNext && (
-          <PaginationItem>
-            <PaginationLink
-              onClick={() => router.push(`/posts/page/${page + 1}`)}
-            >
-              {page + 1}
-            </PaginationLink>
-          </PaginationItem>
-        )}
-
-        {hasExtraNext && (
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-        )}
-
+        {/* Next */}
         <PaginationItem>
           <PaginationNext
             disabled={!hasNext}
