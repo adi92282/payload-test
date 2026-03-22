@@ -1,7 +1,7 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import sharp from 'sharp'
 import path from 'path'
-import { buildConfig, PayloadRequest } from 'payload'
+import { buildConfig, LocalizationConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
@@ -15,11 +15,12 @@ import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { s3Storage } from '@payloadcms/storage-s3'
+import localization from './i18n/localization'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-const isBuild = process.env.BUILD === "true" 
+const isBuild = process.env.BUILD === 'true'
 
 export default buildConfig({
   admin: {
@@ -56,34 +57,39 @@ export default buildConfig({
           height: 900,
         },
       ],
+      url: ({ collectionConfig, data, locale }) =>
+        `/${locale}/${collectionConfig?.slug === 'pages' ? (data.slug !== 'home' ? data.slug : '') : ''}`,
     },
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
   db: mongooseAdapter({
-    url: isBuild || process.env.NODE_ENV === 'development' ? process.env.BUILD_DATABASE || ''  
-      : process.env.DATABASE_URI || '', 
+    url:
+      isBuild || process.env.NODE_ENV === 'development'
+        ? process.env.BUILD_DATABASE || ''
+        : process.env.DATABASE_URI || '',
   }),
   collections: [Pages, Posts, Media, Categories, Users],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
-  plugins: [  
-  ...plugins,  
-  s3Storage({  
-    collections: {  
-      media: true,  
-    },
-    bucket: process.env.AWS_S3_BUCKET_NAME || '',  
-    config: {  
-      credentials: {  
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',  
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',  
-      },  
-      region: process.env.AWS_DEFAULT_REGION,
-      forcePathStyle: true,  
-    },  
-  }),  
-],
+  localization: localization as LocalizationConfig,
+  plugins: [
+    ...plugins,
+    s3Storage({
+      collections: {
+        media: true,
+      },
+      bucket: process.env.AWS_S3_BUCKET_NAME || '',
+      config: {
+        credentials: {
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+        },
+        region: process.env.AWS_DEFAULT_REGION,
+        forcePathStyle: true,
+      },
+    }),
+  ],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
   typescript: {
@@ -92,13 +98,11 @@ export default buildConfig({
   jobs: {
     access: {
       run: ({ req }: { req: PayloadRequest }): boolean => {
-        
         if (req.user) return true
 
         const secret = process.env.CRON_SECRET
         if (!secret) return false
 
-        
         const authHeader = req.headers.get('authorization')
         return authHeader === `Bearer ${secret}`
       },
