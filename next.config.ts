@@ -11,8 +11,10 @@ const nextConfig: NextConfig = {
   images: {  
   remotePatterns: [  
     {  
-      hostname: 'localhost',  
-      protocol: 'http',  
+      protocol: 'http',
+        hostname: 'localhost',
+        port: '3000',
+        pathname: '/api/media/**',
     },  
     {  
     hostname: process.env.NEXT_PUBLIC_SERVER_URL.split('https://')[1],  

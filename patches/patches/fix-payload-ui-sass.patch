@@ -1,0 +1,7 @@
+diff --git a/node_modules/@payloadcms/ui/dist/scss/styles.scss b/node_modules/@payloadcms/ui/dist/scss/styles.scss
+index 0330e9c..c8776a7 100644
+--- a/node_modules/@payloadcms/ui/dist/scss/styles.scss
++++ b/node_modules/@payloadcms/ui/dist/scss/styles.scss
+@@ -1,4 +1,4 @@
+-@import 'vars';
++@import './vars';
