@@ -26,22 +26,34 @@ export default async function RootLayout({
   params,
 }: {
   children: React.ReactNode
-  params: Promise<{
-    locale: TypedLocale
-  }>
+  params: {
+    locale: string
+  }
 }) {
-  const { locale } = await params
-  const currentLocale = localization.locales.find((location) => location.code === locale)
+  const locale = params.locale as TypedLocale
+
+  const currentLocale = localization.locales.find(
+    (location) => location.code === locale
+  )
+
   const direction = currentLocale?.rtl ? 'rtl' : 'ltr'
+
   if (!routing.locales.includes(locale as any)) {
     NotFound()
   }
+
   setRequestLocale(locale)
+
   const messages = await getMessages()
   const { isEnabled } = await draftMode()
 
   return (
-    <html className={cn(GeistSans.variable, GeistMono.variable)} lang={locale} dir={direction}  suppressHydrationWarning>
+    <html
+      className={cn(GeistSans.variable, GeistMono.variable)}
+      lang={locale}
+      dir={direction}
+      suppressHydrationWarning
+    >
       <head>
         <InitTheme />
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
