@@ -26,11 +26,9 @@ export default async function RootLayout({
   params,
 }: {
   children: React.ReactNode
-  params: {
-    locale: string
-  }
+  params: Promise<{ locale: string }>
 }) {
-  const locale = params.locale as TypedLocale
+  const { locale } = await params
 
   const currentLocale = localization.locales.find(
     (location) => location.code === locale
@@ -42,7 +40,7 @@ export default async function RootLayout({
     NotFound()
   }
 
-  setRequestLocale(locale)
+  setRequestLocale(locale as TypedLocale)
 
   const messages = await getMessages()
   const { isEnabled } = await draftMode()
