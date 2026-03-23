@@ -21,6 +21,7 @@ import { getServerSideURL } from '@/utilities/getURL'
 import localization from '@/i18n/localization'
 import LanguageSwitcher from '@/components/LanguageSwich'
 import InitTheme from '@/providers/Theme/InitTheme'
+import { Providers } from '@/providers'
 
 export default async function RootLayout({
   children,
@@ -31,14 +32,12 @@ export default async function RootLayout({
 }) {
   const { locale } = await params
 
-  const currentLocale = localization.locales.find(
-    (location) => location.code === locale
-  )
+  const currentLocale = localization.locales.find((location) => location.code === locale)
 
   const direction = currentLocale?.rtl ? 'rtl' : 'ltr'
 
   if (!routing.locales.includes(locale as any)) {
-  throw  NotFound()
+    throw NotFound()
   }
 
   setRequestLocale(locale as TypedLocale)
@@ -60,17 +59,17 @@ export default async function RootLayout({
         <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
       </head>
       <body>
-        <NextIntlClientProvider key={locale} messages={messages}>
-          <AdminBar
-            adminBarProps={{
-              preview: isEnabled,
-            }}
-          />
-          <LanguageSwitcher/>
-          <Header />
-          {children}
-          <Footer />
-       </NextIntlClientProvider>  
+        <InitTheme />
+
+        <Providers>
+          <NextIntlClientProvider key={locale} messages={messages}>
+            <AdminBar adminBarProps={{ preview: isEnabled }} />
+            <LanguageSwitcher />
+            <Header />
+            {children}
+            <Footer />
+          </NextIntlClientProvider>
+        </Providers>
       </body>
     </html>
   )
