@@ -8,7 +8,6 @@ import React from 'react'
 import { AdminBar } from '@/components/AdminBar'
 import { Footer } from '@/Footer/Component'
 import { Header } from '@/Header/Component'
-import { InitTheme } from '@/providers/Theme/InitTheme'
 import { mergeOpenGraph } from '@/utilities/mergeOpenGraph'
 import { draftMode } from 'next/headers'
 import { NextIntlClientProvider } from 'next-intl'
@@ -21,8 +20,8 @@ import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import localization from '@/i18n/localization'
 import LanguageSwitcher from '@/components/LanguageSwich'
+import InitTheme from '@/providers/Theme/InitTheme'
 
-export const dynamic = 'force-dynamic';
 export default async function RootLayout({
   children,
   params,
@@ -39,7 +38,7 @@ export default async function RootLayout({
   const direction = currentLocale?.rtl ? 'rtl' : 'ltr'
 
   if (!routing.locales.includes(locale as any)) {
-    NotFound()
+  throw  NotFound()
   }
 
   setRequestLocale(locale as TypedLocale)
@@ -67,7 +66,7 @@ export default async function RootLayout({
               preview: isEnabled,
             }}
           />
-          <LanguageSwitcher currentLocale={'pl'}/>
+          <LanguageSwitcher/>
           <Header />
           {children}
           <Footer />

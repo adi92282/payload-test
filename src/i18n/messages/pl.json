@@ -10,5 +10,7 @@
   "dashboard": "Panel",
   "previous": "Poprzednia",
   "next": "Następna",
-  "more-pages": "Więcej stron"
+  "more-pages": "Więcej stron",
+  "design-title": "Tytuł po polsku",
+  "design-description": "Opis po polsku"
 }
