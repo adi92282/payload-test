@@ -1,8 +1,9 @@
 import LanguageSwitcher from "@/components/LanguageSwich"
-import { useTranslations } from "next-intl"
+import { getTranslations } from "next-intl/server"
 
 const Design = async () => {
-    const t = useTranslations()
+    const t = await getTranslations()
+
     return (
         <main>
             <LanguageSwitcher />
@@ -12,4 +13,5 @@ const Design = async () => {
         </main>
     )
 }
+
 export default Design
