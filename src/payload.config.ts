@@ -3,6 +3,8 @@ import sharp from 'sharp'
 import path from 'path'
 import { buildConfig, LocalizationConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
+import {en} from './languages/en'
+import {pl} from './languages/pl'
 
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
@@ -73,6 +75,11 @@ export default buildConfig({
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   localization: localization as LocalizationConfig,
+  i18n: {
+    supportedLanguages: { en, pl },
+    fallbackLanguage: "en",
+    translations: { en, pl },
+  },
   plugins: [
     ...plugins,
     s3Storage({

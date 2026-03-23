@@ -29,6 +29,16 @@ export const Pages: CollectionConfig<'pages'> = {
     read: authenticatedOrPublished,
     update: authenticated,
   },
+  labels: {
+    singular: {
+      en: "Page",
+      pl: "Strona",
+    },
+    plural: {
+      en: "Pages",
+      pl: "Strony",
+    },
+  },
   // This config controls what's populated by default when a page is referenced
   // https://payloadcms.com/docs/queries/select#defaultpopulate-collection-config-property
   // Type safe if the collection slug generic is passed to `CollectionConfig` - `CollectionConfig<'pages'>
@@ -60,13 +70,20 @@ export const Pages: CollectionConfig<'pages'> = {
       type: 'text',
       required: true,
       localized: true,
+      label: {
+        en: "Title",
+        pl: "Tytuł",
+      },
     },
     {
       type: 'tabs',
       tabs: [
         {
           fields: [hero],
-          label: 'Hero',
+          label: {
+            en: "Hero",
+            pl: "Sekcja Hero",
+          },
         },
         {
           fields: [
@@ -79,13 +96,23 @@ export const Pages: CollectionConfig<'pages'> = {
               admin: {
                 initCollapsed: true,
               },
+               label: {
+                en: "Content Blocks",
+                pl: "Bloki treści",
+              },
             },
           ],
-          label: 'Content',
+          label: {
+            en: "Content",
+            pl: "Treść",
+          },
         },
         {
           name: 'meta',
-          label: 'SEO',
+           label: {
+            en: "SEO",
+            pl: "SEO",
+          },
           fields: [
             OverviewField({
               titlePath: 'meta.title',
@@ -109,6 +136,7 @@ export const Pages: CollectionConfig<'pages'> = {
               descriptionPath: 'meta.description',
             }),
           ],
+          localized: true,
         },
       ],
     },
@@ -118,7 +146,10 @@ export const Pages: CollectionConfig<'pages'> = {
       admin: {
         position: 'sidebar',
       },
-      localized: true,
+      label: {
+          en: "Published At",
+          pl: "Data publikacji",
+        },
     },
     slugField(),
   ],
