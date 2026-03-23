@@ -1,35 +1,28 @@
-// app/proxy.ts
-import createProxy from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
+import createProxy from 'next-intl/middleware';
 
-// i18n proxy
 export default createProxy({
   locales: ['pl', 'en'],
   defaultLocale: 'pl',
+  localePrefix: 'never', // 🔹 nie dopisujemy domyślnego locale
 });
 
 export const config = {
-  matcher: [
-    '/((?!api|_next|.*\\..*).*)' // wszystkie ścieżki poza api/_next/static itd.
-  ],
+  matcher: ['/((?!api|_next|.*\\..*).*)'],
 };
 
-// Middleware do przekierowania root "/" → "/pl"
 export function middleware(req: NextRequest): NextResponse | undefined {
   const { pathname } = req.nextUrl;
 
-  // 🔹 Ignoruj /admin i wszystko w /admin
+  // 🔹 Wszystkie ścieżki /admin ignorujemy
   if (pathname.startsWith('/admin')) {
-    return undefined; // przekazujemy dalej, nie zmieniamy URL
+    return NextResponse.next(); // Payload CMS obsługuje panel
   }
 
   // 🔹 Root "/" → domyślny locale
-  if (pathname === '/') {
-    const url = req.nextUrl.clone();
-    url.pathname = '/pl';
-    return NextResponse.redirect(url);
+  if (pathname === '/' || pathname === '/pl') {
+    return undefined; // nic nie robimy, domyślny język bez /pl
   }
 
-  // Pozostałe ścieżki obsługuje next-intl proxy
   return undefined;
 }

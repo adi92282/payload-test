@@ -67,7 +67,7 @@ export default async function RootLayout({
               preview: isEnabled,
             }}
           />
-          <LanguageSwitcher />
+          <LanguageSwitcher currentLocale={'pl'}/>
           <Header />
           {children}
           <Footer />
