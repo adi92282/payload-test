@@ -20,7 +20,9 @@ import { getMessages, setRequestLocale } from 'next-intl/server'
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import localization from '@/i18n/localization'
+import LanguageSwitcher from '@/components/LanguageSwich'
 
+export const dynamic = 'force-dynamic';
 export default async function RootLayout({
   children,
   params,
@@ -64,7 +66,7 @@ export default async function RootLayout({
               preview: isEnabled,
             }}
           />
-
+          <LanguageSwitcher />
           <Header />
           {children}
           <Footer />
