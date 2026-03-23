@@ -1,13 +1,24 @@
 'use client';
 
-import {usePathname, useRouter} from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+
+const locales = ['pl', 'en'];
 
 export default function LanguageSwitcher() {
   const router = useRouter();
   const pathname = usePathname();
 
   const changeLanguage = (locale: string) => {
-    router.push(`/${locale}${pathname}`);
+    const segments = pathname.split('/');
+
+    // jeśli pierwszy segment to locale → usuń go
+    if (locales.includes(segments[1])) {
+      segments.splice(1, 1);
+    }
+
+    const newPath = `/${locale}${segments.join('/')}`;
+
+    router.push(newPath);
   };
 
   return (
