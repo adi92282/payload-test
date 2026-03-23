@@ -53,6 +53,7 @@ export default async function RootLayout({
       lang={locale}
       dir={direction}
       suppressHydrationWarning
+      key={locale}
     >
       <head>
         <InitTheme />
