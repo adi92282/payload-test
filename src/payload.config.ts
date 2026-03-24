@@ -3,8 +3,8 @@ import sharp from 'sharp'
 import path from 'path'
 import { buildConfig, LocalizationConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
-import {en} from './languages/en'
-import {pl} from './languages/pl'
+import { en } from './languages/en'
+import { pl } from './languages/pl'
 
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
@@ -18,6 +18,9 @@ import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { s3Storage } from '@payloadcms/storage-s3'
 import localization from './i18n/localization'
+import { Testimonials } from './collections/Testimonials'
+import { Articles } from './collections/Articles'
+import { ArticleCategories } from './collections/ArticleCategories'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -71,13 +74,26 @@ export default buildConfig({
         ? process.env.BUILD_DATABASE || ''
         : process.env.DATABASE_URI || '',
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections:
+  [
+   Pages,
+   Posts,
+   Media,
+   Categories,
+   Users,
+   Testimonials,
+   Articles,
+   ArticleCategories
+  ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer],
+  globals: [
+    Header,
+    Footer
+  ],
   localization: localization as LocalizationConfig,
   i18n: {
     supportedLanguages: { en, pl },
-    fallbackLanguage: "en",
+    fallbackLanguage: 'en',
     translations: { en, pl },
   },
   plugins: [

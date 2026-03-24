@@ -31,12 +31,12 @@ export const Pages: CollectionConfig<'pages'> = {
   },
   labels: {
     singular: {
-      en: "Page",
-      pl: "Strona",
+      en: 'Page',
+      pl: 'Strona',
     },
     plural: {
-      en: "Pages",
-      pl: "Strony",
+      en: 'Pages',
+      pl: 'Strony',
     },
   },
   // This config controls what's populated by default when a page is referenced
@@ -71,8 +71,8 @@ export const Pages: CollectionConfig<'pages'> = {
       required: true,
       localized: true,
       label: {
-        en: "Title",
-        pl: "Tytuł",
+        en: 'Title',
+        pl: 'Tytuł',
       },
     },
     {
@@ -81,8 +81,8 @@ export const Pages: CollectionConfig<'pages'> = {
         {
           fields: [hero],
           label: {
-            en: "Hero",
-            pl: "Sekcja Hero",
+            en: 'Hero',
+            pl: 'Sekcja Hero',
           },
         },
         {
@@ -96,22 +96,22 @@ export const Pages: CollectionConfig<'pages'> = {
               admin: {
                 initCollapsed: true,
               },
-               label: {
-                en: "Content Blocks",
-                pl: "Bloki treści",
+              label: {
+                en: 'Content Blocks',
+                pl: 'Bloki treści',
               },
             },
           ],
           label: {
-            en: "Content",
-            pl: "Treść",
+            en: 'Content',
+            pl: 'Treść',
           },
         },
         {
           name: 'meta',
-           label: {
-            en: "SEO",
-            pl: "SEO",
+          label: {
+            en: 'SEO',
+            pl: 'SEO',
           },
           fields: [
             OverviewField({
@@ -121,12 +121,31 @@ export const Pages: CollectionConfig<'pages'> = {
             }),
             MetaTitleField({
               hasGenerateFn: true,
+              overrides: {
+                label: {
+                  en: 'Title',
+                  pl: 'Tytuł',
+                },
+              },
             }),
             MetaImageField({
               relationTo: 'media',
+               overrides: {
+                label: {
+                  en: 'Meta Image',
+                  pl: 'Zdjecia Meta',
+                },
+              },
             }),
 
-            MetaDescriptionField({}),
+            MetaDescriptionField({
+               overrides: {
+                label: {
+                  en: 'Description',
+                  pl: 'Opis',
+                },
+              },
+            }),
             PreviewField({
               // if the `generateUrl` function is configured
               hasGenerateFn: true,
@@ -147,9 +166,9 @@ export const Pages: CollectionConfig<'pages'> = {
         position: 'sidebar',
       },
       label: {
-          en: "Published At",
-          pl: "Data publikacji",
-        },
+        en: 'Published At',
+        pl: 'Data publikacji',
+      },
     },
     slugField(),
   ],
@@ -161,7 +180,7 @@ export const Pages: CollectionConfig<'pages'> = {
   versions: {
     drafts: {
       autosave: {
-        interval: 100, 
+        interval: 100,
       },
       schedulePublish: true,
     },

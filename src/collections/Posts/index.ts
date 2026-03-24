@@ -35,6 +35,16 @@ export const Posts: CollectionConfig<'posts'> = {
     read: authenticatedOrPublished,
     update: authenticated,
   },
+  labels: {
+    singular: {
+      en: 'Post',
+      pl: 'Post',
+    },
+    plural: {
+      en: 'Posts',
+      pl: 'Posty',
+    },
+  },
   // This config controls what's populated by default when a post is referenced
   // https://payloadcms.com/docs/queries/select#defaultpopulate-collection-config-property
   // Type safe if the collection slug generic is passed to `CollectionConfig` - `CollectionConfig<'posts'>
@@ -80,6 +90,10 @@ export const Posts: CollectionConfig<'posts'> = {
               name: 'heroImage',
               type: 'upload',
               relationTo: 'media',
+              label: {
+                en: 'Hero Image',
+                pl: 'Zdjęcie hero',
+              },
             },
             {
               name: 'content',
@@ -96,11 +110,17 @@ export const Posts: CollectionConfig<'posts'> = {
                   ]
                 },
               }),
-              label: false,
+              label: {
+                en: 'Content',
+                pl: 'Zawartość',
+              },
               required: true,
             },
           ],
-          label: 'Content',
+          label: {
+            en: 'Content',
+            pl: 'Zawartość',
+          },
         },
         {
           fields: [
@@ -119,6 +139,10 @@ export const Posts: CollectionConfig<'posts'> = {
               },
               hasMany: true,
               relationTo: 'posts',
+              label: {
+                en: 'Relation',
+                pl: 'Relacje',
+              },
             },
             {
               name: 'categories',
@@ -128,6 +152,10 @@ export const Posts: CollectionConfig<'posts'> = {
               },
               hasMany: true,
               relationTo: 'categories',
+              label: {
+                en: 'Categories',
+                pl: 'Kategorie',
+              },
             },
           ],
           label: 'Meta',
@@ -143,12 +171,31 @@ export const Posts: CollectionConfig<'posts'> = {
             }),
             MetaTitleField({
               hasGenerateFn: true,
+              overrides: {
+                label: {
+                  en: 'Title',
+                  pl: 'Tytuł',
+                },
+              },
             }),
             MetaImageField({
               relationTo: 'media',
+              overrides: {
+                label: {
+                  en: 'Meta Image',
+                  pl: 'Zdjecia Meta',
+                },
+              },
             }),
 
-            MetaDescriptionField({}),
+            MetaDescriptionField({
+              overrides: {
+                label: {
+                  en: 'Description',
+                  pl: 'Opis',
+                },
+              },
+            }),
             PreviewField({
               // if the `generateUrl` function is configured
               hasGenerateFn: true,
@@ -170,6 +217,10 @@ export const Posts: CollectionConfig<'posts'> = {
         },
         position: 'sidebar',
       },
+      label: {
+        en: 'Published At',
+        pl: 'Opublikowane',
+      },
       hooks: {
         beforeChange: [
           ({ siblingData, value }) => {
@@ -189,6 +240,10 @@ export const Posts: CollectionConfig<'posts'> = {
       },
       hasMany: true,
       relationTo: 'users',
+      label: {
+        en: 'Author',
+        pl: 'Autor',
+      },
     },
     // This field is only used to populate the user data via the `populateAuthors` hook
     // This is because the `user` collection has access control locked to protect user privacy
