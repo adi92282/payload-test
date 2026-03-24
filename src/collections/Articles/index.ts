@@ -19,13 +19,12 @@ import { authenticatedOrPublished } from "@/access/authenticatedOrPublished";
 // import { Accordion } from "@/blocks/Accoridon/config";
 import { Archive } from "@/blocks/ArchiveBlock/config";
 import { CallToAction } from "@/blocks/CallToAction/config";
-import { Carousel } from "@/blocks/Carousel/config";
 import { Code } from "@/blocks/Code/config";
 import { Content } from "@/blocks/Content/config";
 import { FormBlock } from "@/blocks/Form/config";
 import { MediaBlock } from "@/blocks/MediaBlock/config";
 import { SummaryBox } from "@/blocks/SummaryBox/config";
-import { slugField } from "@/fields/slug";
+import { slugField } from "payload";
 import { generatePreviewPath } from "@/utilities/generatePreviewPath";
 
 import { populateAuthors } from "./hooks/populateAuthors";
@@ -70,18 +69,19 @@ export const Articles: CollectionConfig<"articles"> = {
   admin: {
     defaultColumns: ["title", "slug", "updatedAt"],
     livePreview: {
-      url: ({ data, req }) => {
-        const path = generatePreviewPath({
-          path: `/articles/${typeof data?.slug === "string" ? data.slug : ""}`,
-          locale: req.locale,
-        });
-        return `${process.env.NEXT_PUBLIC_SERVER_URL}${path}`;
-      },
+      livePreview: {
+      url: ({ data, req }) =>
+        generatePreviewPath({
+          slug: data?.slug,
+          collection: 'articles',
+          req,
+        }),
     },
     preview: (data, { req }) =>
       generatePreviewPath({
-        path: `/articles/${typeof data?.slug === "string" ? data.slug : ""}`,
-        locale: req.locale,
+        slug: data?.slug as string,
+        collection: 'articles',
+        req,
       }),
     useAsTitle: "title",
     group: {
@@ -140,8 +140,6 @@ export const Articles: CollectionConfig<"articles"> = {
                         MediaBlock,
                         Archive,
                         FormBlock,
-                        Carousel,
-                        // Accordion,
                         Code,
                       ],
                     }),
