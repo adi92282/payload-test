@@ -11,7 +11,7 @@ import {
   type PaddingBottom,
   type Position,
 } from "@/blocks/globals";
-import RichTextArticle from "@/components/RichTextArticle";
+import RichText from "@/components/RichText";
 import { cn } from "@/utilities/cn";
 
 import type { Summary } from "@/payload-types";
@@ -51,7 +51,7 @@ export const SummaryBox = (props: Summary & SummaryLayoutProps) => {
           background: props.background ?? undefined,
         }}
       >
-        <RichTextArticle data={props.text} enableProse={props.enableProse ?? true} />
+        <RichText data={props.text} enableProse={props.enableProse ?? true} />
       </div>
     </section>
   );

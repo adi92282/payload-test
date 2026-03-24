@@ -73,6 +73,8 @@ export interface Config {
     categories: Category;
     users: User;
     testimonials: Testimonial;
+    articles: Article;
+    categoriesArticle: CategoriesArticle;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -96,6 +98,8 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
+    articles: ArticlesSelect<false> | ArticlesSelect<true>;
+    categoriesArticle: CategoriesArticleSelect<false> | CategoriesArticleSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -815,6 +819,82 @@ export interface Testimonial {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles".
+ */
+export interface Article {
+  id: string;
+  attribution?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  title: string;
+  heroImage: string | Media;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  relatedArticles?: (string | User)[] | null;
+  categoriesArticle?: (string | CategoriesArticle)[] | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
+  };
+  publishedAt?: string | null;
+  authors?: (string | User)[] | null;
+  populatedAuthors?:
+    | {
+        id?: string | null;
+        name?: string | null;
+      }[]
+    | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  featured: boolean;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categoriesArticle".
+ */
+export interface CategoriesArticle {
+  id: string;
+  title: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1026,6 +1106,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'testimonials';
         value: string | Testimonial;
+      } | null)
+    | ({
+        relationTo: 'articles';
+        value: string | Article;
+      } | null)
+    | ({
+        relationTo: 'categoriesArticle';
+        value: string | CategoriesArticle;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1406,6 +1494,48 @@ export interface TestimonialsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "articles_select".
+ */
+export interface ArticlesSelect<T extends boolean = true> {
+  attribution?: T;
+  title?: T;
+  heroImage?: T;
+  content?: T;
+  relatedArticles?: T;
+  categoriesArticle?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  publishedAt?: T;
+  authors?: T;
+  populatedAuthors?:
+    | T
+    | {
+        id?: T;
+        name?: T;
+      };
+  generateSlug?: T;
+  slug?: T;
+  featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categoriesArticle_select".
+ */
+export interface CategoriesArticleSelect<T extends boolean = true> {
+  title?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1816,6 +1946,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'testimonials';
           value: string | Testimonial;
+        } | null)
+      | ({
+          relationTo: 'articles';
+          value: string | Article;
         } | null);
     global?: string | null;
     user?: (string | null) | User;
@@ -1857,6 +1991,59 @@ export interface CodeBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'code';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Summary".
+ */
+export interface Summary {
+  text: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  textAlign?: ('left' | 'center' | 'right') | null;
+  textSize?: ('sm' | 'base' | 'lg') | null;
+  enableProse?: boolean | null;
+  background?: string | null;
+  spacingEnabled?: boolean | null;
+  spacingBottomBox?: ('none' | 'small' | 'medium' | 'large') | null;
+  spacingTopBox?: ('none' | 'small' | 'medium' | 'large') | null;
+  paddingEnabled?: boolean | null;
+  paddingBottomBox?: ('none' | 'small' | 'medium' | 'large') | null;
+  paddingTopBox?: ('none' | 'small' | 'medium' | 'large') | null;
+  borderEnabled?: boolean | null;
+  borderWidth?: ('border' | 'border-2' | 'border-4') | null;
+  radius?: boolean | null;
+  specifiedRadius?: boolean | null;
+  radiusAll?: ('rounded-none' | 'rounded-lg' | 'rounded-xl' | 'rounded-2xl' | 'rounded-3xl' | 'rounded-full') | null;
+  radiusTopLeft?:
+    | ('rounded-none' | 'rounded-lg' | 'rounded-xl' | 'rounded-2xl' | 'rounded-3xl' | 'rounded-full')
+    | null;
+  radiusTopRight?:
+    | ('rounded-none' | 'rounded-lg' | 'rounded-xl' | 'rounded-2xl' | 'rounded-3xl' | 'rounded-full')
+    | null;
+  radiusBottomLeft?:
+    | ('rounded-none' | 'rounded-lg' | 'rounded-xl' | 'rounded-2xl' | 'rounded-3xl' | 'rounded-full')
+    | null;
+  radiusBottomRight?:
+    | ('rounded-none' | 'rounded-lg' | 'rounded-xl' | 'rounded-2xl' | 'rounded-3xl' | 'rounded-full')
+    | null;
+  position?: ('center' | 'left' | 'right') | null;
+  maxWidth?: ('md' | 'lg' | 'xl' | 'full') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'summary';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
