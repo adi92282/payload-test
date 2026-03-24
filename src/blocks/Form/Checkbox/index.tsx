@@ -1,23 +1,35 @@
-import type { CheckboxField } from '@payloadcms/plugin-form-builder/types'
-import type { FieldErrorsImpl, FieldValues, UseFormRegister } from 'react-hook-form'
+/* eslint-disable */
+import {
+  useFormContext,
+  type FieldErrorsImpl,
+  type FieldValues,
+  type UseFormRegister,
+} from "react-hook-form";
 
-import { useFormContext } from 'react-hook-form'
+import { Checkbox as CheckboxUi } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
-import { Checkbox as CheckboxUi } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
-import React from 'react'
+import { Error } from "../Error";
+import { Width } from "../Width";
 
-import { Error } from '../Error'
-import { Width } from '../Width'
+import type { CheckboxField } from "@payloadcms/plugin-form-builder/types";
 
-export const Checkbox: React.FC<
-  CheckboxField & {
-    errors: Partial<FieldErrorsImpl>
-    register: UseFormRegister<FieldValues>
-  }
-> = ({ name, defaultValue, errors, label, register, required, width }) => {
-  const props = register(name, { required: required })
-  const { setValue } = useFormContext()
+export const Checkbox = ({
+  name,
+  defaultValue,
+  errors,
+  label,
+  register,
+  required: requiredFromProps,
+  width,
+}: CheckboxField & {
+  errors: Partial<FieldErrorsImpl<Record<string, any>>>;
+  getValues: any;
+  register: UseFormRegister<FieldValues>;
+  setValue: any;
+}) => {
+  const props = register(name, { required: requiredFromProps });
+  const { setValue } = useFormContext();
 
   return (
     <Width width={width}>
@@ -27,19 +39,12 @@ export const Checkbox: React.FC<
           id={name}
           {...props}
           onCheckedChange={(checked) => {
-            setValue(props.name, checked)
+            setValue(props.name, checked);
           }}
         />
-        <Label htmlFor={name}>
-          {required && (
-            <span className="required">
-              * <span className="sr-only">(required)</span>
-            </span>
-          )}
-          {label}
-        </Label>
+        <Label htmlFor={name}>{label}</Label>
       </div>
-      {errors[name] && <Error name={name} />}
+      {requiredFromProps && errors[name] && <Error />}
     </Width>
-  )
-}
+  );
+};
