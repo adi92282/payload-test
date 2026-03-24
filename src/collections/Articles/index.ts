@@ -69,21 +69,20 @@ export const Articles: CollectionConfig<"articles"> = {
   admin: {
     defaultColumns: ["title", "slug", "updatedAt"],
     livePreview: {
-      livePreview: {
       url: ({ data, req }) =>
         generatePreviewPath({
           slug: data?.slug,
-          collection: 'articles',
+          collection: 'posts',
           req,
         }),
     },
     preview: (data, { req }) =>
       generatePreviewPath({
         slug: data?.slug as string,
-        collection: 'articles',
+        collection: 'posts',
         req,
       }),
-    useAsTitle: "title",
+    useAsTitle: 'title',
     group: {
       en: "Page Settings",
       pl: "Ustawienia strony",
@@ -179,7 +178,7 @@ export const Articles: CollectionConfig<"articles"> = {
                 };
               },
               hasMany: true,
-              relationTo: "articles",
+              relationTo: "users",
             },
             {
               name: "categoriesArticle",
@@ -262,7 +261,7 @@ export const Articles: CollectionConfig<"articles"> = {
         position: "sidebar",
       },
       hasMany: true,
-      relationTo: "administrators",
+      relationTo: "users",
       defaultValue: ({ req }) => req.user?.id,
     },
     // This field is only used to populate the user data via the `populateAuthors` hook
@@ -289,7 +288,7 @@ export const Articles: CollectionConfig<"articles"> = {
         },
       ],
     },
-    ...slugField(),
+    slugField(),
     {
       name: "featured",
       type: "checkbox",
