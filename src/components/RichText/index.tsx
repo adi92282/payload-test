@@ -1,81 +1,87 @@
-import { MediaBlock } from '@/blocks/MediaBlock/Component'
+/* eslint-disable */
 import {
-  DefaultNodeTypes,
-  SerializedBlockNode,
-  SerializedLinkNode,
-  type DefaultTypedEditorState,
-} from '@payloadcms/richtext-lexical'
+  type DefaultNodeTypes,
+  type SerializedBlockNode,
+  type SerializedLinkNode,
+} from "@payloadcms/richtext-lexical";
+import { type SerializedEditorState } from "@payloadcms/richtext-lexical/lexical";
 import {
-  JSXConvertersFunction,
+  type JSXConvertersFunction,
   LinkJSXConverter,
-  RichText as ConvertRichText,
-} from '@payloadcms/richtext-lexical/react'
+  RichText as RichTextWithoutBlocks,
+} from "@payloadcms/richtext-lexical/react";
 
-import { CodeBlock, CodeBlockProps } from '@/blocks/Code/Component'
+import { BannerBlock } from "@/blocks/Banner/Component";
+import { CallToActionBlock } from "@/blocks/CallToAction/Component";
+import { CodeBlock, type CodeBlockProps } from "@/blocks/Code/Component";
+import { MediaBlock } from "@/blocks/MediaBlock/Component";
+import { cn } from "@/utilities/cn";
+import { FormBlock, type FormBlockType } from "@/blocks/Form/Component"; // 👈 dodany import typu
 
 import type {
   BannerBlock as BannerBlockProps,
   CallToActionBlock as CTABlockProps,
   MediaBlock as MediaBlockProps,
-} from '@/payload-types'
-import { BannerBlock } from '@/blocks/Banner/Component'
-import { CallToActionBlock } from '@/blocks/CallToAction/Component'
-import { cn } from '@/utilities/ui'
+} from "@/payload-types";
 
 type NodeTypes =
   | DefaultNodeTypes
-  | SerializedBlockNode<CTABlockProps | MediaBlockProps | BannerBlockProps | CodeBlockProps>
+  | SerializedBlockNode<CTABlockProps | MediaBlockProps | BannerBlockProps | CodeBlockProps | FormBlockType> // 👈 dodany FormBlockType
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
-  const { value, relationTo } = linkNode.fields.doc!
-  if (typeof value !== 'object') {
-    throw new Error('Expected value to be an object')
+  const { value, relationTo } = linkNode.fields.doc!;
+  if (typeof value !== "object") {
+    throw new Error("Expected value to be an object");
   }
-  const slug = value.slug
-  return relationTo === 'posts' ? `/posts/${slug}` : `/${slug}`
-}
+  const slug = value.slug as string;
+  return relationTo === "posts" ? `/posts/${slug}` : `/${slug}`;
+};
 
 const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
   ...defaultConverters,
   ...LinkJSXConverter({ internalDocToHref }),
   blocks: {
-    banner: ({ node }) => <BannerBlock className="col-start-2 mb-4" {...node.fields} />,
-    mediaBlock: ({ node }) => (
+    banner: ({ node }: { node: SerializedBlockNode<BannerBlockProps> }) =>
+      <BannerBlock className="col-start-2 mb-4" {...node.fields} />,
+    mediaBlock: ({ node }: { node: SerializedBlockNode<MediaBlockProps> }) => (
       <MediaBlock
-        className="col-start-1 col-span-3"
+        className="col-span-3 col-start-1"
         imgClassName="m-0"
         {...node.fields}
-        captionClassName="mx-auto max-w-[48rem]"
+        captionClassName="mx-auto max-w-3xl"
         enableGutter={false}
         disableInnerContainer={true}
       />
     ),
-    code: ({ node }) => <CodeBlock className="col-start-2" {...node.fields} />,
-    cta: ({ node }) => <CallToActionBlock {...node.fields} />,
+    formBlock: ({ node }: { node: SerializedBlockNode<FormBlockType> }) =>
+      <FormBlock {...node.fields} />,
+    code: ({ node }: { node: SerializedBlockNode<CodeBlockProps> }) =>
+      <CodeBlock className="col-start-2" {...node.fields} />,
+    cta: ({ node }: { node: SerializedBlockNode<CTABlockProps> }) =>
+      <CallToActionBlock {...node.fields} />,
   },
-})
+});
 
 type Props = {
-  data: DefaultTypedEditorState
-  enableGutter?: boolean
-  enableProse?: boolean
-} & React.HTMLAttributes<HTMLDivElement>
+  data: SerializedEditorState;
+  enableGutter?: boolean;
+  enableProse?: boolean;
+} & React.HTMLAttributes<HTMLDivElement>;
 
 export default function RichText(props: Props) {
-  const { className, enableProse = true, enableGutter = true, ...rest } = props
+  const { className, enableProse = true, enableGutter = false, ...rest } = props;
   return (
-    <ConvertRichText
+    <RichTextWithoutBlocks
       converters={jsxConverters}
-      className={cn(
-        'payload-richtext',
+      className={cn("text-center text-h2",
         {
           container: enableGutter,
-          'max-w-none': !enableGutter,
-          'mx-auto prose md:prose-md dark:prose-invert': enableProse,
+          "max-w-none": !enableGutter,
+          "prose mx-auto md:prose-md dark:prose-invert": enableProse,
         },
         className,
       )}
       {...rest}
     />
-  )
+  );
 }

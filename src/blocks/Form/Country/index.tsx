@@ -1,65 +1,60 @@
-import type { CountryField } from '@payloadcms/plugin-form-builder/types'
-import type { Control, FieldErrorsImpl } from 'react-hook-form'
+/* eslint-disable */
+import { Controller, type Control, type FieldErrorsImpl, type FieldValues } from "react-hook-form";
 
-import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import React from 'react'
-import { Controller } from 'react-hook-form'
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import { Error } from '../Error'
-import { Width } from '../Width'
-import { countryOptions } from './options'
+import { countryOptions } from "./options";
 
-export const Country: React.FC<
-  CountryField & {
-    control: Control
-    errors: Partial<FieldErrorsImpl>
-  }
-> = ({ name, control, errors, label, required, width }) => {
+import { Error } from "../Error";
+import { Width } from "../Width";
+
+import type { CountryField } from "@payloadcms/plugin-form-builder/types";
+
+export const Country = ({
+  name,
+  control,
+  errors,
+  label,
+  required,
+  width,
+}: CountryField & {
+  control: Control<FieldValues, any>;
+  errors: Partial<FieldErrorsImpl<Record<string, any>>>;
+}) => {
   return (
-    <Width width={width}>
-      <Label className="" htmlFor={name}>
+    <Width width={width} className="relative w-full">
+       <Label className="-top-7" htmlFor={name}>
         {label}
-
-        {required && (
-          <span className="required">
-            * <span className="sr-only">(required)</span>
-          </span>
-        )}
       </Label>
       <Controller
         control={control}
         defaultValue=""
         name={name}
         render={({ field: { onChange, value } }) => {
-          const controlledValue = countryOptions.find((t) => t.value === value)
+          const controlledValue = countryOptions.find((t) => t.value === value);
 
           return (
             <Select onValueChange={(val) => onChange(val)} value={controlledValue?.value}>
               <SelectTrigger className="w-full" id={name}>
                 <SelectValue placeholder={label} />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 {countryOptions.map(({ label, value }) => {
                   return (
                     <SelectItem key={value} value={value}>
                       {label}
                     </SelectItem>
-                  )
+                  );
                 })}
               </SelectContent>
             </Select>
-          )
+          );
         }}
         rules={{ required }}
       />
-      {errors[name] && <Error name={name} />}
+     
+      {required && errors[name] && <Error />}
     </Width>
-  )
-}
+  );
+};

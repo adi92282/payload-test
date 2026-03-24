@@ -1,32 +1,35 @@
-import type { TextField } from '@payloadcms/plugin-form-builder/types'
-import type { FieldErrorsImpl, FieldValues, UseFormRegister } from 'react-hook-form'
+/* eslint-disable */
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import React from 'react'
+import { Error } from "../Error";
+import { Width } from "../Width";
 
-import { Error } from '../Error'
-import { Width } from '../Width'
+import type { TextField } from "@payloadcms/plugin-form-builder/types";
+import type { FieldErrorsImpl, FieldValues, UseFormRegister } from "react-hook-form";
 
-export const Text: React.FC<
-  TextField & {
-    errors: Partial<FieldErrorsImpl>
-    register: UseFormRegister<FieldValues>
-  }
-> = ({ name, defaultValue, errors, label, register, required, width }) => {
+export const Text = ({
+  name,
+  defaultValue,
+  errors,
+  label,
+  register,
+  required: requiredFromProps,
+  width,
+}: TextField & {
+  errors: Partial<FieldErrorsImpl<Record<string, any>>>;
+  register: UseFormRegister<FieldValues>;
+}) => {
   return (
-    <Width width={width}>
-      <Label htmlFor={name}>
-        {label}
-
-        {required && (
-          <span className="required">
-            * <span className="sr-only">(required)</span>
-          </span>
-        )}
-      </Label>
-      <Input defaultValue={defaultValue} id={name} type="text" {...register(name, { required })} />
-      {errors[name] && <Error name={name} />}
+    <Width width={width} className="relative w-full">
+      <Input
+        defaultValue={defaultValue}
+        id={name}
+        type="text"
+        {...register(name, { required: requiredFromProps })}
+      /> 
+      <Label htmlFor={name}>{label}</Label>
+      {requiredFromProps && errors[name] && <Error />}
     </Width>
-  )
-}
+  );
+};
