@@ -9,6 +9,7 @@ const Design = async () => {
       <LanguageSwitcher />
       <h1 className="text-4xl font-bold mb-4">{t('design-title')}</h1>
       <p className="text-lg">{t('design-description')}</p>
+      <p className="text-lg">{t('design-description')}</p>
     </main>
   )
 }
