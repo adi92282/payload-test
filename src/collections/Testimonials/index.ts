@@ -142,7 +142,7 @@ export const Testimonials: CollectionConfig<"posts"> = {
   versions: {
     drafts: {
       autosave: {
-        interval: 100,
+        interval: 300,
       },
       schedulePublish: true,
     },
